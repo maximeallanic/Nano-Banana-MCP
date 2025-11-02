@@ -4,6 +4,10 @@
 
 A Model Context Protocol (MCP) server that provides AI image generation and editing capabilities using Google's Gemini 2.5 Flash Image API. Generate stunning images, edit existing ones, and iterate on your creations with simple text prompts.
 
+<a href="https://glama.ai/mcp/servers/@ConechoAI/Nano-Banana-MCP">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@ConechoAI/Nano-Banana-MCP/badge" alt="Nano-Banana-MCP MCP server" />
+</a>
+
 ## ✨ Features
 
 - 🎨 **Generate Images**: Create new images from text descriptions
