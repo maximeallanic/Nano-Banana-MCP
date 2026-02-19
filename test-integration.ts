@@ -20,7 +20,7 @@ class IntegrationTester {
   private serverProcess: ChildProcess | null = null;
 
   async runAllTests(): Promise<void> {
-    console.log('🚀 Starting nano-banana MCP server integration tests...\n');
+    console.log('\ud83d\ude80 Starting nano-banana MCP server integration tests...\n');
 
     try {
       await this.testProjectStructure();
@@ -31,7 +31,7 @@ class IntegrationTester {
       
       this.printResults();
     } catch (error) {
-      console.error('❌ Integration tests failed:', error);
+      console.error('\u274c Integration tests failed:', error);
       process.exit(1);
     }
   }
@@ -49,9 +49,9 @@ class IntegrationTester {
     for (const file of requiredFiles) {
       try {
         await fs.access(path.join(process.cwd(), file));
-        this.addResult(`Project structure - ${file}`, true, `✅ ${file} exists`);
+        this.addResult(`Project structure - ${file}`, true, `\u2705 ${file} exists`);
       } catch {
-        this.addResult(`Project structure - ${file}`, false, `❌ ${file} missing`);
+        this.addResult(`Project structure - ${file}`, false, `\u274c ${file} missing`);
       }
     }
   }
@@ -71,21 +71,21 @@ class IntegrationTester {
 
       for (const dep of requiredDeps) {
         if (packageJson.dependencies[dep]) {
-          this.addResult(`Dependencies - ${dep}`, true, `✅ ${dep} found`);
+          this.addResult(`Dependencies - ${dep}`, true, `\u2705 ${dep} found`);
         } else {
-          this.addResult(`Dependencies - ${dep}`, false, `❌ ${dep} missing`);
+          this.addResult(`Dependencies - ${dep}`, false, `\u274c ${dep} missing`);
         }
       }
 
       // Check if node_modules exists
       try {
         await fs.access(path.join(process.cwd(), 'node_modules'));
-        this.addResult('Dependencies - node_modules', true, '✅ Dependencies installed');
+        this.addResult('Dependencies - node_modules', true, '\u2705 Dependencies installed');
       } catch {
-        this.addResult('Dependencies - node_modules', false, '❌ Run npm install first');
+        this.addResult('Dependencies - node_modules', false, '\u274c Run npm install first');
       }
     } catch (error) {
-      this.addResult('Dependencies check', false, `❌ Failed to check dependencies: ${error}`);
+      this.addResult('Dependencies check', false, `\u274c Failed to check dependencies: ${error}`);
     }
   }
 
@@ -112,12 +112,12 @@ class IntegrationTester {
           // Check if dist directory was created
           try {
             await fs.access(path.join(process.cwd(), 'dist'));
-            this.addResult('Build process', true, '✅ Build successful');
+            this.addResult('Build process', true, '\u2705 Build successful');
           } catch {
-            this.addResult('Build process', false, '❌ Dist directory not created');
+            this.addResult('Build process', false, '\u274c Dist directory not created');
           }
         } else {
-          this.addResult('Build process', false, `❌ Build failed: ${errorOutput}`);
+          this.addResult('Build process', false, `\u274c Build failed: ${errorOutput}`);
         }
         resolve();
       });
@@ -135,24 +135,24 @@ class IntegrationTester {
       
       // Write test config
       await fs.writeFile(configPath, JSON.stringify(testConfig, null, 2));
-      this.addResult('Configuration - Write', true, '✅ Config file written');
+      this.addResult('Configuration - Write', true, '\u2705 Config file written');
 
       // Read test config
       const configData = await fs.readFile(configPath, 'utf-8');
       const parsedConfig = JSON.parse(configData);
       
       if (parsedConfig.geminiApiKey === testConfig.geminiApiKey) {
-        this.addResult('Configuration - Read', true, '✅ Config file read correctly');
+        this.addResult('Configuration - Read', true, '\u2705 Config file read correctly');
       } else {
-        this.addResult('Configuration - Read', false, '❌ Config data mismatch');
+        this.addResult('Configuration - Read', false, '\u274c Config data mismatch');
       }
 
       // Cleanup
       await fs.unlink(configPath);
-      this.addResult('Configuration - Cleanup', true, '✅ Test config cleaned up');
+      this.addResult('Configuration - Cleanup', true, '\u2705 Test config cleaned up');
 
     } catch (error) {
-      this.addResult('Configuration handling', false, `❌ Configuration test failed: ${error}`);
+      this.addResult('Configuration handling', false, `\u274c Configuration test failed: ${error}`);
     }
   }
 
@@ -168,14 +168,14 @@ class IntegrationTester {
         'edit_image',
         'get_configuration_status',
         'GoogleGenerativeAI',
-        'gemini-2.5-flash-image-preview',
+        'gemini-3-pro-image-preview',
       ];
 
       for (const element of requiredElements) {
         if (sourceCode.includes(element)) {
-          this.addResult(`Tool Schema - ${element}`, true, `✅ ${element} found`);
+          this.addResult(`Tool Schema - ${element}`, true, `\u2705 ${element} found`);
         } else {
-          this.addResult(`Tool Schema - ${element}`, false, `❌ ${element} missing`);
+          this.addResult(`Tool Schema - ${element}`, false, `\u274c ${element} missing`);
         }
       }
 
@@ -191,10 +191,10 @@ class IntegrationTester {
                               sourceCode.includes('image/png');
 
       this.addResult('MIME type handling', hasMimeTypeLogic, 
-        hasMimeTypeLogic ? '✅ MIME type logic found' : '❌ MIME type logic missing');
+        hasMimeTypeLogic ? '\u2705 MIME type logic found' : '\u274c MIME type logic missing');
 
     } catch (error) {
-      this.addResult('Tool Schema validation', false, `❌ Schema test failed: ${error}`);
+      this.addResult('Tool Schema validation', false, `\u274c Schema test failed: ${error}`);
     }
   }
 
@@ -203,28 +203,28 @@ class IntegrationTester {
   }
 
   private printResults(): void {
-    console.log('\n📋 Integration Test Results:');
-    console.log('═'.repeat(50));
+    console.log('\n\ud83d\udccb Integration Test Results:');
+    console.log('\u2550'.repeat(50));
 
     const passed = this.results.filter(r => r.passed).length;
     const total = this.results.length;
 
     this.results.forEach(result => {
-      console.log(`${result.passed ? '✅' : '❌'} ${result.message}`);
+      console.log(`${result.passed ? '\u2705' : '\u274c'} ${result.message}`);
     });
 
-    console.log('═'.repeat(50));
-    console.log(`📊 Results: ${passed}/${total} tests passed`);
+    console.log('\u2550'.repeat(50));
+    console.log(`\ud83d\udcca Results: ${passed}/${total} tests passed`);
 
     if (passed === total) {
-      console.log('🎉 All integration tests passed! The nano-banana MCP server is ready to use.');
-      console.log('\n📖 Next steps:');
+      console.log('\ud83c\udf89 All integration tests passed! The nano-banana MCP server is ready to use.');
+      console.log('\n\ud83d\udcd6 Next steps:');
       console.log('1. Get a Gemini API key from Google AI Studio');
       console.log('2. Configure your MCP client (Claude Desktop, etc.)');
       console.log('3. Use the configure_gemini_token tool to set up your API key');
       console.log('4. Start generating and editing images with nano-banana!');
     } else {
-      console.log('⚠️  Some tests failed. Please fix the issues before using the server.');
+      console.log('\u26a0\ufe0f  Some tests failed. Please fix the issues before using the server.');
       process.exit(1);
     }
   }

@@ -199,13 +199,13 @@ class NanoBananaMCP {
         content: [
           {
             type: "text",
-            text: "✅ Gemini API token configured successfully! You can now use nano-banana image generation features.",
+            text: "\u2705 Gemini API token configured successfully! You can now use nano-banana image generation features.",
           },
         ],
       };
     } catch (error) {
       if (error instanceof z.ZodError) {
-        throw new McpError(ErrorCode.InvalidParams, `Invalid API key: ${error.errors[0]?.message}`);
+        throw new McpError(ErrorCode.InvalidParams, `Invalid API key: ${error.issues[0]?.message}`);
       }
       throw error;
     }
@@ -220,7 +220,7 @@ class NanoBananaMCP {
     
     try {
       const response = await this.genAI!.models.generateContent({
-        model: "gemini-2.5-flash-image-preview",
+        model: "gemini-3-pro-image-preview",
         contents: prompt,
       });
       
@@ -265,22 +265,22 @@ class NanoBananaMCP {
       }
       
       // Build response content
-      let statusText = `🎨 Image generated with nano-banana (Gemini 2.5 Flash Image)!\n\nPrompt: "${prompt}"`;
+      let statusText = `\ud83c\udfa8 Image generated with nano-banana (Gemini 3 Pro Image)!\n\nPrompt: "${prompt}"`;
       
       if (textContent) {
         statusText += `\n\nDescription: ${textContent}`;
       }
       
       if (savedFiles.length > 0) {
-        statusText += `\n\n📁 Image saved to:\n${savedFiles.map(f => `- ${f}`).join('\n')}`;
-        statusText += `\n\n💡 View the image by:`;
+        statusText += `\n\n\ud83d\udcc1 Image saved to:\n${savedFiles.map(f => `- ${f}`).join('\n')}`;
+        statusText += `\n\n\ud83d\udca1 View the image by:`;
         statusText += `\n1. Opening the file at the path above`;
         statusText += `\n2. Clicking on "Called generate_image" in Cursor to expand the MCP call details`;
-        statusText += `\n\n🔄 To modify this image, use: continue_editing`;
-        statusText += `\n📋 To check current image info, use: get_last_image_info`;
+        statusText += `\n\n\ud83d\udd04 To modify this image, use: continue_editing`;
+        statusText += `\n\ud83d\udccb To check current image info, use: get_last_image_info`;
       } else {
         statusText += `\n\nNote: No image was generated. The model may have returned only text.`;
-        statusText += `\n\n💡 Tip: Try running the command again - sometimes the first call needs to warm up the model.`;
+        statusText += `\n\n\ud83d\udca1 Tip: Try running the command again - sometimes the first call needs to warm up the model.`;
       }
       
       // Add text content first
@@ -353,7 +353,7 @@ class NanoBananaMCP {
       
       // Use new API format with multiple images and text
       const response = await this.genAI!.models.generateContent({
-        model: "gemini-2.5-flash-image-preview",
+        model: "gemini-3-pro-image-preview",
         contents: [
           {
             parts: imageParts
@@ -404,7 +404,7 @@ class NanoBananaMCP {
       }
       
       // Build response
-      let statusText = `🎨 Image edited with nano-banana!\n\nOriginal: ${imagePath}\nEdit prompt: "${prompt}"`;
+      let statusText = `\ud83c\udfa8 Image edited with nano-banana!\n\nOriginal: ${imagePath}\nEdit prompt: "${prompt}"`;
       
       if (referenceImages && referenceImages.length > 0) {
         statusText += `\n\nReference images used:\n${referenceImages.map(f => `- ${f}`).join('\n')}`;
@@ -415,15 +415,15 @@ class NanoBananaMCP {
       }
       
       if (savedFiles.length > 0) {
-        statusText += `\n\n📁 Edited image saved to:\n${savedFiles.map(f => `- ${f}`).join('\n')}`;
-        statusText += `\n\n💡 View the edited image by:`;
+        statusText += `\n\n\ud83d\udcc1 Edited image saved to:\n${savedFiles.map(f => `- ${f}`).join('\n')}`;
+        statusText += `\n\n\ud83d\udca1 View the edited image by:`;
         statusText += `\n1. Opening the file at the path above`;
         statusText += `\n2. Clicking on "Called edit_image" in Cursor to expand the MCP call details`;
-        statusText += `\n\n🔄 To continue editing, use: continue_editing`;
-        statusText += `\n📋 To check current image info, use: get_last_image_info`;
+        statusText += `\n\n\ud83d\udd04 To continue editing, use: continue_editing`;
+        statusText += `\n\ud83d\udccb To check current image info, use: get_last_image_info`;
       } else {
         statusText += `\n\nNote: No edited image was generated.`;
-        statusText += `\n\n💡 Tip: Try running the command again - sometimes the first call needs to warm up the model.`;
+        statusText += `\n\n\ud83d\udca1 Tip: Try running the command again - sometimes the first call needs to warm up the model.`;
       }
       
       content.unshift({
@@ -448,27 +448,19 @@ class NanoBananaMCP {
     let sourceInfo = "";
     
     if (isConfigured) {
-      statusText = "✅ Gemini API token is configured and ready to use";
+      statusText = "\u2705 Gemini API token is configured and ready to use";
       
       switch (this.configSource) {
         case 'environment':
-          sourceInfo = "\n📍 Source: Environment variable (GEMINI_API_KEY)\n💡 This is the most secure configuration method.";
+          sourceInfo = "\n\ud83d\udccd Source: Environment variable (GEMINI_API_KEY)\n\ud83d\udca1 This is the most secure configuration method.";
           break;
         case 'config_file':
-          sourceInfo = "\n📍 Source: Local configuration file (.nano-banana-config.json)\n💡 Consider using environment variables for better security.";
+          sourceInfo = "\n\ud83d\udccd Source: Local configuration file (.nano-banana-config.json)\n\ud83d\udca1 Consider using environment variables for better security.";
           break;
       }
     } else {
-      statusText = "❌ Gemini API token is not configured";
-      sourceInfo = `
-
-📝 Configuration options (in priority order):
-1. 🥇 MCP client environment variables (Recommended)
-2. 🥈 System environment variable: GEMINI_API_KEY  
-3. 🥉 Use configure_gemini_token tool
-
-💡 For the most secure setup, add this to your MCP configuration:
-"env": { "GEMINI_API_KEY": "your-api-key-here" }`;
+      statusText = "\u274c Gemini API token is not configured";
+      sourceInfo = `\n\n\ud83d\udcdd Configuration options (in priority order):\n1. \ud83e\udd47 MCP client environment variables (Recommended)\n2. \ud83e\udd48 System environment variable: GEMINI_API_KEY  \n3. \ud83e\udd49 Use configure_gemini_token tool\n\n\ud83d\udca1 For the most secure setup, add this to your MCP configuration:\n"env": { "GEMINI_API_KEY": "your-api-key-here" }`;
     }
     
     return {
@@ -495,7 +487,7 @@ class NanoBananaMCP {
       referenceImages?: string[];
     };
 
-    // 检查最后的图片文件是否存在
+    // Check if last image file exists
     try {
       await fs.access(this.lastImagePath);
     } catch {
@@ -523,13 +515,13 @@ class NanoBananaMCP {
         content: [
           {
             type: "text",
-            text: "📷 No previous image found.\n\nPlease generate or edit an image first, then this command will show information about your last image.",
+            text: "\ud83d\udcf7 No previous image found.\n\nPlease generate or edit an image first, then this command will show information about your last image.",
           },
         ],
       };
     }
 
-    // 检查文件是否存在
+    // Check if file exists
     try {
       await fs.access(this.lastImagePath);
       const stats = await fs.stat(this.lastImagePath);
@@ -538,7 +530,7 @@ class NanoBananaMCP {
         content: [
           {
             type: "text",
-            text: `📷 Last Image Information:\n\nPath: ${this.lastImagePath}\nFile Size: ${Math.round(stats.size / 1024)} KB\nLast Modified: ${stats.mtime.toLocaleString()}\n\n💡 Use continue_editing to make further changes to this image.`,
+            text: `\ud83d\udcf7 Last Image Information:\n\nPath: ${this.lastImagePath}\nFile Size: ${Math.round(stats.size / 1024)} KB\nLast Modified: ${stats.mtime.toLocaleString()}\n\n\ud83d\udca1 Use continue_editing to make further changes to this image.`,
           },
         ],
       };
@@ -547,7 +539,7 @@ class NanoBananaMCP {
         content: [
           {
             type: "text",
-            text: `📷 Last Image Information:\n\nPath: ${this.lastImagePath}\nStatus: ❌ File not found\n\n💡 The image file may have been moved or deleted. Please generate a new image.`,
+            text: `\ud83d\udcf7 Last Image Information:\n\nPath: ${this.lastImagePath}\nStatus: \u274c File not found\n\n\ud83d\udca1 The image file may have been moved or deleted. Please generate a new image.`,
           },
         ],
       };
