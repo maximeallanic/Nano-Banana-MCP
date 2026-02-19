@@ -1,6 +1,6 @@
 {
   "name": "@maximeallanic/nano-banana-mcp",
-  "version": "1.0.4",
+  "version": "1.0.3",
   "description": "MCP server for Google's Gemini 3 Pro Image generation API with cross-platform support",
   "main": "dist/index.js",
   "type": "module",
